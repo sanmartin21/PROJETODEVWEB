@@ -2,7 +2,7 @@
 	header('Content-Type: text/html; charset=UTF-8');
 	include 'connect/connect.php';
 	include 'conf/Conexao.php';
-	
+	//ta funcionadoo
 	$acao = '';
 	if (isset($_GET["acao"]))
 		  $acao = $_GET["acao"];
