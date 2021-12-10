@@ -12,11 +12,12 @@ if (isset($_GET["acao"])) {
 
 if ($acao == "editar") {
     if (isset($_GET["codigo"])) {
-        $codigo = $_GET["codigo"];
         $dados = carregaBDParaVetor($codigo);
+        $codigo = $dados["codigo"];
     }
 }
 ?>
+
 <html>
 
 <head>
@@ -47,11 +48,12 @@ if ($acao == "editar") {
         <fieldset>
             <legend><?php echo $title; ?></legend>
             Código
-            <input type="text" name="codigo" id="codigo" size="3" value="<?php if ($acao == "editar") echo $dados['codigo'];
-                                                                            else echo "0"; ?>" readonly>
+            <input type="text" name="codigo" id="codigo" size="3" value="<?php if ($acao == "editar") echo $dados['codigo'];else echo "0"; ?>" readonly>
+                                                                                                                            
 
             Nome da Disciplina
-            <input type='text' size='11' name='name' id='name' value="<?php if ($acao == "editar") echo $dados['name']; ?>" />
+            <input type='text' size='11' name='name' id='name' value="<?php if ($acao == "editar") echo $dados['nome']; ?>"><br>
+            
 
 
             <label for="">Nome do Professor</label>
@@ -94,52 +96,11 @@ if ($acao == "editar") {
             <br><br>
             <?php if ($acao == "editar") { ?>
 
-                <table width="100%" border="1" align="left" id='painel'>
-                    <tr>
-                    <tr>
-                        <td width="90" align="center"><b>Nome|Idade</b></td>
-                        <td width="120" align="right"><b></b></td>
-                    </tr>
-                    <tr>
-                        <td width="90" align="center">
-                            <select name="anome" id="anome">
-                                <?php
-                                $sql = "SELECT aluno.codigo AS codigo_aluno, disciplina.codigo, aluno.nome as anome, aluno.idade, disciplina.nome, disciplina.professor_codigo AS professor, disciplina.turma_codigo AS turma FROM aluno, aluno_has_disciplina, disciplina LEFT JOIN professor ON disciplina.professor_codigo = professor.codigo LEFT JOIN turma ON disciplina.turma_codigo = turma.codigo
-                            WHERE disciplina.codigo = codigo
-                            AND aluno_has_disciplina.disciplina_codigo = disciplina.codigo AND aluno.codigo = aluno_has_disciplina.aluno_codigo;";
-                                echo $sql;
-                                $result = mysqli_query($conexao, $sql);
-                                while ($row = mysqli_fetch_array($result)) {
-                                ?>
-                                    <option value="<?php echo $row[0]; ?>">
-                                        <?php echo $row[1] . " | " . $row[2]; ?></option>
-                                <?php } ?>
-                            </select>
-                        </td>
-                        <td width="120" align="right">
-                            <button name="acao" id="acao" value="addAluno" type="submit" onclick="return validaAddProd();">
-                                <img src="img/form/add.png" alt="Adicionar">Adicionar Aluno
-                            </button><br><br>
-                        </td>
-                    </tr>
-                </table>
-
-
-                <br><br>
-
-                <table width="100%" border="1" align="left" id='painel'>
-                    <tr>
-                        <td width="90" align="center"><b>Código</b></td>
-                        <td width="400"><b>Nome</b></td>
-                        <td width="400"><b>Idade</b></td>
-                        <td width="20"></td>
-                    </tr>
-
-
-
+                <table width="100%"   border="1" align="left" id='painel'>
+                
                     <?php
                     $sql = "SELECT aluno.codigo AS codigo_aluno, disciplina.codigo, aluno.nome as anome, aluno.idade, disciplina.nome, disciplina.professor_codigo AS professor, disciplina.turma_codigo AS turma FROM aluno, aluno_has_disciplina, disciplina LEFT JOIN professor ON disciplina.professor_codigo = professor.codigo LEFT JOIN turma ON disciplina.turma_codigo = turma.codigo
-                        WHERE disciplina.codigo = codigo
+                        WHERE disciplina.codigo = $codigo
                         AND aluno_has_disciplina.disciplina_codigo = disciplina.codigo AND aluno.codigo = aluno_has_disciplina.aluno_codigo;";
                     $result = mysqli_query($conexao, $sql);
                     while ($row = mysqli_fetch_array($result)) {
@@ -148,16 +109,16 @@ if ($acao == "editar") {
                             <td align="center"><?php echo $row['codigo_aluno']; ?></td>
                             <td width="400"><?php echo $row['anome']; ?></td>
                             <td><?php echo $row['idade']; ?></td>
-                            <td><a href="javascript:excluirRegistro('acaodisciplinamaster.php?acao=excluirAluno&aluno=<?php echo $row['codigo_aluno']; ?>&disciplina=<?php echo $codigo; ?>')"><img border="0" src="img/form/delete.png" alt="Excluir"></a></td>
+                            <td><a href="javascript:excluirRegistro('acaodisciplinamaster.php?acao=excluirAluno&aluno=<?php echo $row['codigo_aluno'];?>&disciplina=<?php echo $codigo;?>')"><img border="0" src="img/form/delete.png" alt="Excluir"></a></td>
                         </tr>
                     <?php }
                     ?>
                 </table>
-                <table width="100%" border="1" align="left" id='painel'>
-                    <tr>
-                    <tr><tr>
-                    <td width="90" align="center"><b>Nome|Idade</b></td>
-                    <td width="120" align="right"><b></b></td>
+                        <tr>
+                            <td width="400" align="center"><b>Nome|</b></td>
+                            <td width="400" align="center"><b>Idade</b></td>
+                            <td width="20" ></td>
+                        </tr>
                 </tr>
                 <tr>
                     <td width="90" align="center">
@@ -176,6 +137,22 @@ if ($acao == "editar") {
 
                     </tr>
                 </table>
+                    <tr>
+                        <?php 
+                        ?>
+                           
+                        </td>
+                        <td width="120" align="right">
+                            <button name="acao" id="acao" value="addAluno" type="submit" onclick="return validaAddProd();">
+                                <img src="img/form/add.png" alt="Adicionar">Adicionar Aluno
+                            </button><br><br>
+                        </td>
+                    </tr>
+                </table>
+
+
+                <br><br>
+                
             <?php } ?>
         </fieldset>
     </form>

@@ -107,9 +107,7 @@ require_once "conf/Conexao.php";
             }
         }
 
-        $sql = "SELECT aluno.codigo AS codigo_aluno, disciplina.codigo, aluno.nome as anome, aluno.idade, disciplina.nome, disciplina.professor_codigo AS professor, disciplina.turma_codigo AS turma FROM aluno, aluno_has_disciplina, disciplina LEFT JOIN professor ON disciplina.professor_codigo = professor.codigo LEFT JOIN turma ON disciplina.turma_codigo = turma.codigo
-        WHERE aluno_has_disciplina.disciplina_codigo = disciplina.codigo 
-        AND aluno.codigo = aluno_has_disciplina.aluno_codigo;" .$WHERE." " .$ORDER;
+        $sql = "SELECT disciplina.codigo, disciplina.nome, professor.nome AS profnome, turma.nome AS turnome FROM disciplina LEFT JOIN professor ON disciplina.professor_codigo = professor.codigo LEFT JOIN turma ON disciplina.turma_codigo = turma.codigo" .$WHERE." " .$ORDER;
         $pdo = Conexao::getInstance();
         $consulta = $pdo->query($sql);
     ?>
@@ -130,7 +128,7 @@ require_once "conf/Conexao.php";
                     <td><?php echo $linha['codigo']; ?></td>
                     <td><?php echo $linha['nome']; ?></td>
                     <td><?php echo $linha['profnome']; ?></td>
-                    <td><?php echo $linha['turma']; ?></td>
+                    <td><?php echo $linha['turnome']; ?></td>
                     <td><a href='caddisciplinamaster.php?acao=editar&codigo=<?php echo $linha['codigo']; ?>'><img class="icon" src="img/edit.png" alt=""></a></td>
                     <td><a href="javascript:excluirRegistro('acaodisciplinamaster.php?acao=excluir&codigo=<?php echo $linha['codigo']; ?>')"><img class="icon" src="img/delete.png" alt=""></a></td>
                 </tr>

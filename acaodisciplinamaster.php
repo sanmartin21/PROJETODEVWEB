@@ -1,6 +1,7 @@
 <?php
 	header('Content-Type: text/html; charset=UTF-8');
 	include 'connect/connect.php';
+	include 'conf/Conexao.php';
 	
 	$acao = '';
 	if (isset($_GET["acao"]))
@@ -37,22 +38,29 @@
 	}
 
 	function excluirAluno($disciplina,$aluno){
-		$sql = 'DELETE FROM '.$GLOBALS['tb_aluno_has_disciplina'].
-		       ' WHERE '.$GLOBALS['tb_aluno_has_disciplina'].'.disciplina_codigo. =  '.$disciplina.
-		       ' AND '.$GLOBALS['tb_aluno_has_disciplina'].'.aluno_codigo. =  '.$aluno;
-		$result = mysqli_query($GLOBALS['conexao'],$sql);
-		if ($result == 1)
-			header('location:caddisciplinamaster.php?msg="se"&acao=editar&codigo='.$disciplina);
-		else
-			header('location:caddisciplinamaster.php?msg="er"&acao=editar&codigo='.$disciplina);
+		$sql = "
+			DELETE 
+			  FROM {$GLOBALS['tb_aluno_has_disciplina']}
+	         WHERE aluno_codigo = :aluno
+		       AND disciplina_codigo = :disciplina;
+		";
+
+		$pdo = Conexao::getInstance();
+		$stmt = $pdo->prepare($sql);
+        $stmt->bindParam(':aluno', $aluno, PDO::PARAM_INT);
+		$stmt->bindParam(':disciplina', $disciplina, PDO::PARAM_INT);
+		$stmt->execute();
+
+		header('location:caddisciplinamaster.php?acao=editar&codigo='.$disciplina);
 	}
-	
+
 	function adicionarAluno($codigo,$aluno){
 		$sql = 'INSERT INTO '.$GLOBALS['tb_aluno_has_disciplina'].
 		       ' (disciplina_codigo, aluno_codigo)'. 
 		       ' VALUES ('.$codigo.','.$aluno.')';
 			//    echo "<script>console.log('Debug Objects: " . $sql . "' );</script>";
 		$result = mysqli_query($GLOBALS['conexao'],$sql);
+		$codigo = mysqli_insert_id($GLOBALS['conexao']);
 		if ($result == 1)
 			header('location:caddisciplinamaster.php?msg="si"&acao=editar&codigo='.$codigo);
 		else
